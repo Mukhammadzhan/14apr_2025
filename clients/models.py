@@ -99,11 +99,29 @@ class Client(AbstractBaseUser, PermissionsMixin):
         related_name="client_permissions",
         blank=True
     )
+    avatar = models.ImageField(
+        verbose_name="аватар",
+        upload_to="avatars/",
+        blank=True,
+        null=True,
+    )
+    
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email"]
     objects = ClientManager()
+    def get_full_name(self) -> str:
+        """Return full name."""
+        return f"{self.first_name} {self.last_name}".strip()
 
+    def get_short_name(self) -> str:
+        """Return short name."""
+        return self.first_name or self.username
+
+    def delete_account(self):
+        """Soft delete account."""
+        self.is_active = False
+        self.save()
     
     class Meta:
         ordering = ("id",)

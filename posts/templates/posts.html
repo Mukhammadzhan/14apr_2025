@@ -4,13 +4,40 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Блог группы PyE-242</title>
+    <title>{% block title %}Блог группы PyE-242{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/posts.css' %}">
     <script src="{% static 'js/likes2.js' %}"></script>
 </head>
 <body>
     <header>
         <h1>Блог группы <span class="group-name">PyE-242</span></h1>
+        <nav>
+            {% if user %}
+                <button type="submit"><a href="{% url 'clients:profile' %}" class="btn">Личный кабинет</a></button>   
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Выйти</button>
+                </form>
+            {% else %}
+                <button type="submit"><a href="{% url 'clients:login' %}" class="btn">Войти</a></button>
+                <button type="submit"><a href="{% url 'clients:reg' %}" class="btn">Регистрация</a></button>
+            {% endif %}
+        </nav>
+       <p></p>
+       {% if messages %}
+            <div class="container">
+            
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            
+        
+            
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
     </header>
 
     <div class="main-wrapper">

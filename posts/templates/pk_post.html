@@ -33,22 +33,29 @@
                         {% endfor %}
                     </div>
                     <div class="post-reactions">
-                        <button onclick="likePost('{{ post.pk }}')" id="likeButton{{ post.pk }}">
-                            👍 {{ post.likes }}
+                        <button onclick="likePost('{{ post.pk }}')" 
+                                id="likeButton{{ post.pk }}"
+                                class="like {% if request.user in post.users_liked.all %}active{% endif %}"
+                                {% if not request.user.is_authenticated %}disabled{% endif %}>
+                            👍 <span class="count">{{ post.likes }}</span>
                         </button>
-                        <button onclick="dislikePost('{{post.pk}}')" id="dislikeButton{{ post.pk }}">
-                            👎 {{ post.dislikes }}
+                        <button onclick="dislikePost('{{ post.pk }}')" 
+                                id="dislikeButton{{ post.pk }}"
+                                class="dislike {% if request.user in post.users_disliked.all %}active{% endif %}"
+                                {% if not request.user.is_authenticated %}disabled{% endif %}>
+                            👎 <span class="count">{{ post.dislikes }}</span>
                         </button>
                     </div>
-
-                    {% if author %}
+                </p>
+                    {% if request.user == post.user %}
                     <div class="form-delete">
-                        <form action="" method="post">
+                        <form action="{% url 'delete_post' post.pk %}" method="post">
                             {% csrf_token %}
                             <input type="submit" value="Удалить" class="btn-submit">
                         </form>
                     </div>
                     {% endif %}
+                
                 </div>
 
                 <!-- Блок комментариев -->

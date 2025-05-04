@@ -7,7 +7,7 @@ body {
 
 header {
     background: #007BFF;
-    color: white;
+    color: rgb(255, 255, 255);
     padding: 20px;
     text-align: center;
 }
@@ -67,6 +67,8 @@ header {
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
+
+
 
 .post {
     border-bottom: 1px solid #ddd;
@@ -188,15 +190,65 @@ header {
     color: #ffffff;
 }
 
+/* Стили для кнопок реакций */
+.post-reactions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.post-reactions button {
+    padding: 8px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+}
+
+.post-reactions button:hover {
+    background: #f5f5f5;
+}
+
+/* Стиль для активного лайка */
+.post-reactions button.active.like {
+    background: #e8f5e9;
+    border-color: #4CAF50;
+    color: #2e7d32;
+}
+
+/* Стиль для активного дизлайка */
+.post-reactions button.active.dislike {
+    background: #ffebee;
+    border-color: #f44336;
+    color: #c62828;
+}
+
+/* Анимации реакций */
 .reaction-animate {
-    transform: scale(1.2);
-    transition: transform 0.2s, background-color 0.2s;
+    animation: pulse 0.4s ease;
 }
 
-.like-active {
-    background-color: #a5f1a5; /* светло-зелёный */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
 
-.dislike-active {
-    background-color: #f1a5a5; /* светло-красный */
+/* Иконки внутри кнопок */
+.post-reactions button::before {
+    display: inline-block;
+    font-size: 1.1em;
 }
+
+/* Состояние disabled для неавторизованных */
+.post-reactions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f5f5f5;
+}
+

@@ -1,0 +1,21 @@
+{% extends 'posts.html' %}
+
+{% block content %}
+<h1>Личный кабинет</h1>
+<div class="profile-info">
+    <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+    <p><strong>Имя:</strong> {{ user.first_name|default:"Не указано" }}</p>
+    <p><strong>Фамилия:</strong> {{ user.last_name|default:"Не указано" }}</p>
+    <p><strong>Email:</strong> {{ client.email }}</p>
+    <p><strong>Дата рождения:</strong> {{ client.birthday|default:"Не указана" }}</p>
+    <p><strong>Пол:</strong> {{ client.get_gender_display|default:"Не указан" }}</p>
+    <p><strong>Дата регистрации:</strong> {{ client.date_created }}</p>
+</div>
+
+<div class="profile-actions">
+    <button type="submit"><a href="{% url 'profile_edit' %}" class="btn btn-primary">Редактировать профиль</a></button>
+    <button type="submit"><a href="{% url 'profile_delete' %}" class="btn btn-danger">Удалить аккаунт</a></button>
+    <button type="submit"><a href="{% url 'base' %}">Главный страница</a></button>
+</div>
+
+{% endblock %}

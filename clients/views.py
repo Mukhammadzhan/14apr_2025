@@ -1,5 +1,10 @@
 import logging
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.contrib.auth import logout
+
 from clients.validators import validate_email_domain, validate_username, validate_password
 from django.core.exceptions import ValidationError
 from django.views import View
@@ -73,3 +78,43 @@ class LoginView(View):
             return render(request=request, template_name="login.html")
         login(request=request, user=client)
         return redirect(to="base")
+    
+class ProfileView(LoginRequiredMixin, TemplateView):
+    """Личный кабинет пользователя"""
+    template_name = "profile.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['client'] = self.request.user
+        return context
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    """Редактирование профиля"""
+    model = Client
+    template_name = "profile_edit.html"
+    fields = ['first_name', 'last_name', 'email', 'birthday', 'gender']
+    success_url = reverse_lazy('profile')
+    
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def form_valid(self, form):
+        messages.success(self.request, "Профиль успешно обновлен")
+        return super().form_valid(form)
+
+
+class ProfileDeleteView(LoginRequiredMixin, DeleteView):
+    """Удаление профиля"""
+    model = Client
+    template_name = "profile_delete.html"
+    success_url = reverse_lazy('base')
+    
+    def get_object(self, queryset=None):
+        return self.request.user
+    
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        logout(request)
+        messages.success(request, "Ваш аккаунт был успешно удален")
+        return response

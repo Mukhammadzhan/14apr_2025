@@ -4,12 +4,14 @@ from typing import Literal
 from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 
+
 from django.views import View
 from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.utils import IntegrityError
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from posts.models import Posts, Images, Categories
 
@@ -102,28 +104,60 @@ class EditPostView(View):
         # Перенаправляем на просмотр поста после редактирования
         return redirect("edit_post", pk=post.pk)
 
-class LikesView(View):
-    def post(
-        self, request: HttpRequest, 
-        pk: int, action: Literal["like", "dislike"]
-    ):
-        client = request.user
-        if not client.is_active:
-            return
+class LikesView(LoginRequiredMixin, View):
+    def post(self, request, pk, action):
         try:
             post = Posts.objects.get(pk=pk)
         except Posts.DoesNotExist:
-            return
-        result = {}
-        if action == "like":
-            post.likes += 1
-            result["likes"] = post.likes
-        elif action == "dislike":
-            post.dislikes += 1
-            result["dislikes"] = post.dislikes
-        post.save(update_fields=["likes", "dislikes"])
-        return JsonResponse(data=result)
+            return JsonResponse({'error': 'Пост не найден'}, status=404)
 
+        user = request.user
+        response_data = {
+            'likes': post.likes,
+            'dislikes': post.dislikes,
+            'action': action,
+            'status': None
+        }
+
+        if action == 'like':
+            if user in post.users_disliked.all():
+                post.users_disliked.remove(user)
+                post.dislikes -= 1
+
+            if user in post.users_liked.all():
+                post.users_liked.remove(user)
+                post.likes -= 1
+                response_data['status'] = 'unliked'
+            else:
+                post.users_liked.add(user)
+                post.likes += 1
+                response_data['status'] = 'liked'
+
+        elif action == 'dislike':
+            if user in post.users_liked.all():
+                post.users_liked.remove(user)
+                post.likes -= 1
+
+            if user in post.users_disliked.all():
+                post.users_disliked.remove(user)
+                post.dislikes -= 1
+                response_data['status'] = 'undisliked'
+            else:
+                post.users_disliked.add(user)
+                post.dislikes += 1
+                response_data['status'] = 'disliked'
+
+        post.save()
+        response_data.update({
+            'likes': post.likes,
+            'dislikes': post.dislikes
+        })
+        return JsonResponse(response_data)
+
+
+
+
+    
 @require_POST
 def delete_post(request: HttpRequest, post_id: int) -> HttpResponse:
     post = Posts.objects.filter(pk=post_id).first()

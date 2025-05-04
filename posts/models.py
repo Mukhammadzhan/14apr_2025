@@ -55,6 +55,18 @@ class Posts(models.Model):
         verbose_name="Категории",
         related_name="post_categories",
     )
+    users_liked = models.ManyToManyField(
+        to=Client,
+        verbose_name="Пользователи, поставившие лайк",
+        related_name="liked_posts",
+        blank=True,
+    )
+    users_disliked = models.ManyToManyField(
+        to=Client,
+        verbose_name="Пользователи, поставившие дизлайк",
+        related_name="disliked_posts",
+        blank=True,
+    )
 
     class Meta:
         ordering = ("id",)
