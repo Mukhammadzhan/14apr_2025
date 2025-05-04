@@ -15,13 +15,6 @@ from clients.models import Client
 logger = logging.getLogger()
 
 
-class BasePageView(View):
-    """Базовый контроллер, потом еще перепишем."""
-
-    def get(self, request: HttpRequest) -> HttpResponse:
-        """Проста заглушка пока что."""
-        
-        return HttpResponse(content=f"<h1>Здарова Алмат</h1>")
     
 class RegistrationView(View):
     """Registration controller. There will be only get"""

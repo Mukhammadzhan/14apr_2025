@@ -1,34 +1,139 @@
 import logging
+from typing import Literal
+
+from django.views.decorators.http import require_POST
+from django.utils.decorators import method_decorator
 
 from django.views import View
-from django.http import HttpResponse, HttpRequest
+from django.db.models.query import QuerySet
+from django.http import HttpResponse, HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.utils import IntegrityError
 
-from posts.models import Posts, Images
+from posts.models import Posts, Images, Categories
 
 logger = logging.getLogger()
 
-
+class BasePostView(View):
+    def get(self, request: HttpRequest) -> HttpResponse:
+        is_active = request.user.is_active
+        posts: QuerySet[Posts] = Posts.objects.all()
+        return render(
+            request=request, 
+            template_name="posts.html", 
+            context={
+                "posts": posts,
+                "user": is_active       
+            }
+        )
 
 class PostsView(View):
     """Posts controller with all methods."""
 
     def get(self, request: HttpRequest) -> HttpResponse:
-        posts: Posts = Posts.objects.all()
-        if not posts:
-            return render(request=request, template_name="posts.html", status=404,)
-        return render(request=request, template_name="posts.html", context=posts,)
+        is_active = request.user.is_active
+        categories = Categories.objects.all()
+        if not categories:
+            return HttpResponse(
+                content="<h1>Something went wrong</h1>"
+            )
+        if not is_active:
+            return redirect(to="login")
+        return render(
+            request=request, 
+            template_name="post_form.html", 
+            context={"categories": categories}
+        )
 
     def post(self, request: HttpRequest) -> HttpResponse:
-        pass
+        post = Posts.objects.create(
+            user=request.user,
+            title=request.POST.get("title"),
+            description=request.POST.get("description")
+        )
+        post.categories.set(request.POST.getlist("categories"))
+        imgs = [Images(image=img, post=post) 
+                for img in request.FILES.getlist("images")]
+        Images.objects.bulk_create(imgs)
+        return redirect(to="base")
 
-    def put(self, request: HttpRequest) -> HttpResponse:
-        pass
+class EditPostView(View):
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        try:
+            post = Posts.objects.get(pk=pk)
+        except Posts.DoesNotExist: 
+            return HttpResponse("<h1>Пост не найден</h1>", status=404)
 
-    def patch(self, request: HttpRequest) -> HttpResponse:
-        pass
+        categories = Categories.objects.all()
+        return render(
+            request=request, 
+            template_name="pk_post.html", 
+            context={"post": post, "categories": categories, "request": request}
+        )
 
-    def delete(self, request: HttpRequest) -> HttpResponse:
-        pass
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        try:
+            post = Posts.objects.get(pk=pk)
+        except Posts.DoesNotExist:
+            return HttpResponse("<h1>Пост не найден</h1>", status=404)
+
+        if request.user != post.user:
+            return HttpResponse("<h2>У вас нет прав редактировать этот пост</h2>", status=403)
+
+        # Обновляем заголовок и описание
+        post.title = request.POST.get("title", post.title)
+        post.description = request.POST.get("description", post.description)
+
+        # Обновляем категории
+        category_ids = request.POST.getlist("categories")
+        if category_ids:
+            post.categories.set(category_ids)
+
+        # Добавляем новые изображения, если они есть
+        images = request.FILES.getlist("images")
+        if images:
+            from posts.models import Images  # убедитесь, что модель импортирована
+            new_images = [Images(image=img, post=post) for img in images]
+            Images.objects.bulk_create(new_images)
+
+        post.save()
+
+        # Перенаправляем на просмотр поста после редактирования
+        return redirect("edit_post", pk=post.pk)
+
+class LikesView(View):
+    def post(
+        self, request: HttpRequest, 
+        pk: int, action: Literal["like", "dislike"]
+    ):
+        client = request.user
+        if not client.is_active:
+            return
+        try:
+            post = Posts.objects.get(pk=pk)
+        except Posts.DoesNotExist:
+            return
+        result = {}
+        if action == "like":
+            post.likes += 1
+            result["likes"] = post.likes
+        elif action == "dislike":
+            post.dislikes += 1
+            result["dislikes"] = post.dislikes
+        post.save(update_fields=["likes", "dislikes"])
+        return JsonResponse(data=result)
+
+@require_POST
+def delete_post(request: HttpRequest, post_id: int) -> HttpResponse:
+    post = Posts.objects.filter(pk=post_id).first()
+    if post:
+        if request.user == post.user:
+            post.delete()
+            messages.success(request, "Пост успешно удален.")
+            return redirect('base')
+        else:
+            messages.error(request, "Вы не можете удалить этот пост.")
+            return redirect('post_detail', post_id=post.id)
+    return redirect('base')
+

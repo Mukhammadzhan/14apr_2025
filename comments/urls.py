@@ -4,5 +4,5 @@ from comments.views import CommentsView
 
 
 urlpatterns = [
-    path(route="", view=CommentsView.as_view(), name="comments")
+    path(route="comments/", view=CommentsView.as_view(), name="comments")
 ]
