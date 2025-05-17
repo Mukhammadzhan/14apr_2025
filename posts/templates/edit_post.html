@@ -6,6 +6,105 @@
     <meta charset="UTF-8">
     <title>Редактировать пост - {{ post.title }}</title>
     <link rel="stylesheet" href="{% static 'css/posts.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .main-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            margin-top: 8px;
+        }
+
+        .btn-submit {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+
+        .existing-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .existing-images img {
+            width: 100px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -26,7 +125,7 @@
 
                 <div class="form-group">
                     <label for="description">Описание:</label>
-                    <textarea id="description" name="description" required>{{ post.description }}</textarea>
+                    <textarea id="description" name="description" rows="5" required>{{ post.description }}</textarea>
                 </div>
 
                 <div class="form-group">
@@ -42,5 +141,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="images">Изображения:</label>
-                    <input type="
+                    <label for="images">Добавить изображения:</label>
+                    <input type="file" id="images" name="images" multiple>
+                    {% if post.post_images.all %}
+                        <div class="existing-images">
+                            {% for image in post.post_images.all %}
+                                <img src="{{ image.image.url }}" alt="Изображение">
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn-submit">Сохранить изменения</button>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

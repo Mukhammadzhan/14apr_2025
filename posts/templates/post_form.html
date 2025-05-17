@@ -5,6 +5,106 @@
     <meta charset="UTF-8">
     <title>{% if post %}Редактировать пост{% else %}Создать пост{% endif %}</title>
     <link rel="stylesheet" href="{% static 'css/posts.css' %}">
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .form-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .post-form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .hint {
+            font-size: 13px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        input[type="file"] {
+            padding: 6px 0;
+        }
+
+        .btn-submit {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #357ab8;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 6px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -30,12 +130,12 @@
                 <select id="categories" name="categories" multiple>
                     {% for category in categories %}
                         <option value="{{ category.id }}"
-                        {% if category in post.categories.all %}selected{% endif %}>
+                        {% if post and category in post.categories.all %}selected{% endif %}>
                             {{ category.title }}
                         </option>
                     {% endfor %}
                 </select>
-                <p class="hint">* Зажми Ctrl или Cmd чтобы выбрать несколько</p>
+                <p class="hint">* Зажми Ctrl (или Cmd на Mac), чтобы выбрать несколько</p>
             </div>
 
             <div class="form-group">

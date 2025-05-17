@@ -7,7 +7,7 @@ body {
 
 header {
     background: #007BFF;
-    color: rgb(255, 255, 255);
+    color: #fff;
     padding: 20px;
     text-align: center;
 }
@@ -18,65 +18,16 @@ header {
 }
 
 .main-wrapper {
-    display: flex;
-    max-width: 1200px;
+    max-width: 800px;
     margin: 40px auto;
     padding: 0 20px;
-    gap: 20px;
-}
-
-.sidebar {
-    flex: 0 0 250px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    height: fit-content;
-}
-
-.sidebar h2 {
-    margin-top: 0;
-}
-
-.sidebar input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-.sidebar button {
-    width: 100%;
-    padding: 8px;
-    background: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.sidebar button:hover {
-    background: #0056b3;
 }
 
 .container {
-    flex: 1;
     background: #fff;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-
-
-.post {
-    border-bottom: 1px solid #ddd;
-    padding: 20px 0;
-}
-
-.post:last-child {
-    border-bottom: none;
 }
 
 .post-title {
@@ -111,86 +62,15 @@ header {
     font-size: 0.8em;
 }
 
-.post-images {
-    margin-bottom: 10px;
-}
-
-.post-image {
+.post-images img {
     max-width: 100%;
     height: auto;
-    display: block;
     margin-bottom: 10px;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-.post-reactions {
-    font-size: 0.9em;
-    color: #666;
-}
-
-.form-wrapper {
-    max-width: 700px;
-    margin: 40px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-.post-form .form-group {
-    margin-bottom: 20px;
-}
-
-.post-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #333;
-}
-
-.post-form input[type="text"],
-.post-form textarea,
-.post-form select {
-    width: 100%;
-    padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
-    resize: vertical;
-}
-
-.post-form input[type="file"] {
-    font-size: 1em;
-}
-
-.btn-submit {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.btn-submit:hover {
-    background-color: #0056b3;
-}
-
-.hint {
-    font-size: 0.8em;
-    color: #888;
-    margin-top: 4px;
-}
-
-.empty {
-    color: #ffffff;
-}
-
-/* Стили для кнопок реакций */
+/* --- Реакции --- */
 .post-reactions {
     display: flex;
     gap: 10px;
@@ -207,48 +87,119 @@ header {
     display: flex;
     align-items: center;
     gap: 5px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .post-reactions button:hover {
     background: #f5f5f5;
 }
 
-/* Стиль для активного лайка */
+/* Активный лайк */
 .post-reactions button.active.like {
     background: #e8f5e9;
     border-color: #4CAF50;
     color: #2e7d32;
 }
 
-/* Стиль для активного дизлайка */
+/* Активный дизлайк */
 .post-reactions button.active.dislike {
     background: #ffebee;
     border-color: #f44336;
     color: #c62828;
 }
 
-/* Анимации реакций */
-.reaction-animate {
-    animation: pulse 0.4s ease;
+/* Анимация пульса при нажатии */
+.reaction-animate.like {
+    animation: pulse-green 0.4s ease;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+.reaction-animate.dislike {
+    animation: pulse-red 0.4s ease;
 }
 
-/* Иконки внутри кнопок */
-.post-reactions button::before {
-    display: inline-block;
-    font-size: 1.1em;
+@keyframes pulse-green {
+    0% { transform: scale(1); background: #e8f5e9; }
+    50% { transform: scale(1.2); background: #c8e6c9; }
+    100% { transform: scale(1); background: #e8f5e9; }
 }
 
-/* Состояние disabled для неавторизованных */
+@keyframes pulse-red {
+    0% { transform: scale(1); background: #ffebee; }
+    50% { transform: scale(1.2); background: #ffcdd2; }
+    100% { transform: scale(1); background: #ffebee; }
+}
+
+/* Disabled */
 .post-reactions button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     background: #f5f5f5;
 }
 
+.profile-header {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 32px;
+    color: #333;
+}
+
+.profile-container {
+    background: #fff;
+    padding: 30px;
+    margin: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    max-width: 700px;
+    font-size: 16px;
+}
+
+.profile-info p {
+    margin: 12px 0;
+    color: #555;
+}
+
+.profile-info strong {
+    color: #222;
+}
+
+.profile-actions {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn.blue {
+    background-color: #4a90e2;
+}
+
+.btn.blue:hover {
+    background-color: #3c7edb;
+}
+
+.btn.red {
+    background-color: #ff4d4f;
+}
+
+.btn.red:hover {
+    background-color: #e84142;
+}
+
+.btn.gray {
+    background-color: #888;
+}
+
+.btn.gray:hover {
+    background-color: #666;
+}

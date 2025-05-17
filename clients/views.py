@@ -1,4 +1,5 @@
 import logging
+import os
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, UpdateView, DeleteView
@@ -16,6 +17,7 @@ from django.contrib import messages
 from django.db.utils import IntegrityError
 
 from clients.models import Client
+from clients.utils import send_email
 
 logger = logging.getLogger()
 
@@ -41,10 +43,17 @@ class RegistrationView(View):
             return render(request=request, template_name="reg.html")
 
         try:
+            code = os.urandom(32).hex()
             Client.objects.create(
                 email=email,
                 username=username,
                 password=make_password(raw_password),
+                activation_code = code
+            )
+            send_email(
+                template="account_activation.html",
+                context={"username": username, "code": f"http://127.0.0.1:8000/activation/{username}/{code}"},
+                to=email, title="Confirm your account",
             )
             messages.info(request=request, message="Succes Registration")
             return render(request=request, template_name="reg.html")
@@ -118,3 +127,37 @@ class ProfileDeleteView(LoginRequiredMixin, DeleteView):
         logout(request)
         messages.success(request, "Ваш аккаунт был успешно удален")
         return response
+
+class ActivationView(View):
+    def get(self, request: HttpRequest, username: str, code: str) -> HttpResponse:
+        client = Client.objects.filter(
+            username=username,
+            activation_code = code
+        ).first()
+        if not client:
+            return HttpResponse(content="<h1>Ты кто?</h1>")
+        client.is_active = True
+        client.save(update_fields=["is_active"])
+        return redirect(to="clients:login")
+
+class ResetPasswordView(View):
+    def get(self, request: HttpRequest) -> HttpResponse:
+        return render(template_name="reset_account.html", request=request)
+        
+    
+    def post(self, request: HttpRequest) -> HttpResponse:
+        username=request.POST.get('username')
+        email=request.POST.get('email')
+        client = Client.objects.filter(username=username, email=email).first()
+        new_password = os.urandom(32).hex()
+        if not client:
+            return HttpResponse("<h1>Пользователь не найден</h1>")
+
+        client.password = make_password(new_password)
+        client.save(update_fields=["password"])
+        send_email(
+                template="reset_password.html",
+                context={"username": username, "new_password": f"{new_password}"},
+                to=email, title="Confirm your account",
+            )
+        return redirect(to="clients:login")

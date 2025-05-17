@@ -1,0 +1,241 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f7f7f7;
+    color: #333;
+}
+
+header {
+    background-color: #4a90e2;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.group-name {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+nav {
+    margin-top: 10px;
+}
+
+nav .btn,
+button.btn {
+    background-color: #fff;
+    border: none;
+    color: #4a90e2;
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+nav .btn:hover,
+button.btn:hover {
+    background-color: #e6f0ff;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.sidebar {
+    width: 220px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    height: fit-content;
+}
+
+.sidebar input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.sidebar button {
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+}
+
+.post-title {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.post-title a {
+    text-decoration: none;
+    color: #4a90e2;
+}
+
+.post-meta {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.post-categories {
+    margin: 10px 0;
+}
+
+.category {
+    display: inline-block;
+    background-color: #d9eaff;
+    color: #3178c6;
+    padding: 3px 8px;
+    margin: 2px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.post-description {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.post-images {
+    margin: 10px 0;
+}
+
+.post-image {
+    max-width: 100%;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.post-reactions {
+    margin-top: 10px;
+}
+
+button.like, button.dislike {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+button.like.active, button.dislike.active {
+    font-weight: bold;
+    color: #4a90e2;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.profile-header {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 32px;
+    color: #333;
+}
+
+.profile-container {
+    background: #fff;
+    padding: 30px;
+    margin: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    max-width: 700px;
+    font-size: 16px;
+}
+
+.profile-info p {
+    margin: 12px 0;
+    color: #555;
+}
+
+.profile-info strong {
+    color: #222;
+}
+
+.profile-actions {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn.blue {
+    background-color: #4a90e2;
+}
+
+.btn.blue:hover {
+    background-color: #3c7edb;
+}
+
+.btn.red {
+    background-color: #ff4d4f;
+}
+
+.btn.red:hover {
+    background-color: #e84142;
+}
+
+.btn.gray {
+    background-color: #888;
+}
+
+.btn.gray:hover {
+    background-color: #666;
+}

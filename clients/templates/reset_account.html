@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="auth-container">
-        <h2>Регистрация</h2>
+        <h2>Сброс пароля</h2>
         <div id="errors"></div>
 
 
@@ -22,7 +22,7 @@
             </div>
         {% endif %}
 
-        <form id="regForm" method="post" action="{% url 'clients:reg' %}">
+        <form id="regForm" method="post" action="{% url 'clients:reset_password' %}">
             {% csrf_token %}
             <div class="input-group">
                 <input type="text" name="username" placeholder="Имя пользователя" required>
@@ -30,10 +30,7 @@
             <div class="input-group">
                 <input type="email" name="email" placeholder="Email" required>
             </div>
-            <div class="input-group">
-                <input type="password" name="password" placeholder="Пароль" required>
-            </div>
-            <button type="submit">Зарегистрироваться</button>
+            <button type="submit">Получить новый пароль</button>
         </form>
 
         <p>Уже есть аккаунт? <a href="{% url 'clients:login' %}">Войти</a></p>

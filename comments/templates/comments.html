@@ -1,13 +1,39 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    
-</body>
-</html>
+<link rel="stylesheet" href="{% static 'css/posts2.css' %}">
+<script src="{% static 'js/comments.js' %}"></script>
+
+<div class="comment" style="margin-left: {{ level|default:0 }}px;">
+    <div class="comment-meta">
+        {{ comment.user.username|default:"Аноним" }} | {{ comment.date_created|date:"d.m.Y H:i" }}
+    </div>
+    <div class="comment-text">
+        {{ comment.text }}
+    </div>
+    <div class="comment-reactions">
+        <button class="comment-like-btn {% if request.user in comment.users_liked.all %}active{% endif %}"
+                onclick="likeComment({{ comment.id }})"
+                {% if not request.user.is_authenticated %}disabled{% endif %}>
+            👍 <span id="comment-like-count-{{ comment.id }}">{{ comment.users_liked.count }}</span>
+        </button>
+        <button class="comment-dislike-btn {% if request.user in comment.users_disliked.all %}active{% endif %}"
+                onclick="dislikeComment({{ comment.id }})"
+                {% if not request.user.is_authenticated %}disabled{% endif %}>
+            👎 <span id="comment-dislike-count-{{ comment.id }}">{{ comment.users_disliked.count }}</span>
+        </button>
+    </div>
+
+    <!-- Форма ответа -->
+    <div class="reply-form">
+        <form action="{% url 'add_reply' comment.id %}" method="post">
+            {% csrf_token %}
+            <textarea name="text" rows="2" placeholder="Ответить на комментарий..." required></textarea>
+            <button type="submit">Ответить</button>
+        </form>
+    </div>
+
+    {% for child in comment.child_comments.all %}
+        {% include "comments.html" with comment=child post=post level=level|add:30 %}
+    {% endfor %}
+</div>
+
+

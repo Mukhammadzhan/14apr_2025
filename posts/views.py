@@ -36,10 +36,6 @@ class PostsView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         is_active = request.user.is_active
         categories = Categories.objects.all()
-        if not categories:
-            return HttpResponse(
-                content="<h1>Something went wrong</h1>"
-            )
         if not is_active:
             return redirect(to="login")
         return render(
@@ -60,7 +56,7 @@ class PostsView(View):
         Images.objects.bulk_create(imgs)
         return redirect(to="base")
 
-class EditPostView(View):
+class PostView(View):
     def get(self, request: HttpRequest, pk: int) -> HttpResponse:
         try:
             post = Posts.objects.get(pk=pk)
@@ -104,6 +100,50 @@ class EditPostView(View):
         # Перенаправляем на просмотр поста после редактирования
         return redirect("edit_post", pk=post.pk)
 
+class EditPostView(View):
+    def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+        try:
+            post = Posts.objects.get(pk=pk)
+        except Posts.DoesNotExist: 
+            return HttpResponse("<h1>Пост не найден</h1>", status=404)
+
+        categories = Categories.objects.all()
+        return render(
+            request=request, 
+            template_name="edit_post.html", 
+            context={"post": post, "categories": categories, "request": request}
+        )
+
+    def post(self, request: HttpRequest, pk: int) -> HttpResponse:
+        try:
+            post = Posts.objects.get(pk=pk)
+        except Posts.DoesNotExist:
+            return HttpResponse("<h1>Пост не найден</h1>", status=404)
+
+        if request.user != post.user:
+            return HttpResponse("<h2>У вас нет прав редактировать этот пост</h2>", status=403)
+
+        # Обновляем заголовок и описание
+        post.title = request.POST.get("title", post.title)
+        post.description = request.POST.get("description", post.description)
+
+        # Обновляем категории
+        category_ids = request.POST.getlist("categories")
+        if category_ids:
+            post.categories.set(category_ids)
+
+        # Добавляем новые изображения, если они есть
+        images = request.FILES.getlist("images")
+        if images:
+            from posts.models import Images  # убедитесь, что модель импортирована
+            new_images = [Images(image=img, post=post) for img in images]
+            Images.objects.bulk_create(new_images)
+
+        post.save()
+
+        # Перенаправляем на просмотр поста после редактирования
+        return redirect("edit_post", pk=post.pk)
+    
 class LikesView(LoginRequiredMixin, View):
     def post(self, request, pk, action):
         try:

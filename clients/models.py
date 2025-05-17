@@ -68,7 +68,13 @@ class Client(AbstractBaseUser, PermissionsMixin):
     )
     is_active = models.BooleanField(
         verbose_name="активный",
-        default=True,
+        default=False,
+    )
+    activation_code = models.CharField(
+        verbose_name="код активации",
+        max_length=100,
+        blank=True,
+        null=True,
     )
     is_staff = models.BooleanField(
         verbose_name="сотрудник",

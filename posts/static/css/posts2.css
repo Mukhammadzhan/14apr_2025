@@ -1,0 +1,227 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #4a90e2;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.group-name {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    width: 100%;
+    max-width: 900px;
+}
+
+.post-title {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #4a90e2;
+}
+
+.post-meta {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.post-categories {
+    margin-bottom: 10px;
+}
+
+.category {
+    background-color: #eaf4ff;
+    color: #3178c6;
+    padding: 4px 10px;
+    margin-right: 5px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.post-description {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.post-images {
+    margin-top: 20px;
+}
+
+.post-image {
+    max-width: 100%;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.post-reactions {
+    margin-top: 15px;
+}
+
+button.like,
+button.dislike {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+button.active {
+    font-weight: bold;
+    color: #4a90e2;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Delete button */
+.form-delete {
+    margin-top: 20px;
+}
+
+.btn-submit {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    background-color: #e84142;
+}
+
+/* Комментарий */
+.comment {
+    background-color: #f9f9f9;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    border-left: 3px solid #4a90e2;
+    transition: background 0.3s ease;
+}
+
+/* Вложенность (отступ слева) будет контролироваться inline-стилем через level */
+.comment-meta {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 6px;
+}
+
+.comment-text {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 6px;
+    white-space: pre-line;
+}
+
+.comment-reactions {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.reply-form {
+    margin-top: 8px;
+}
+
+.reply-form textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.reply-form button {
+    margin-top: 6px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reply-form button:hover {
+    background-color: #3c7edb;
+}
+
+
+/* New comment form */
+.new-comment-form {
+    margin-top: 40px;
+}
+
+.new-comment-form h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.new-comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    resize: vertical;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.new-comment-form button {
+    margin-top: 10px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.new-comment-form button:hover {
+    background-color: #3c7edb;
+}
+
+.btn-edit {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-edit:hover {
+    background-color: #3c7edb;
+}

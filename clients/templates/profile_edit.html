@@ -1,12 +1,20 @@
 {% extends 'posts.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Редактирование профиля</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
-    <a href="{% url 'profile' %}" class="btn btn-secondary">Отмена</a>
-</form>
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
+<div class="profile-edit-wrapper">
+    <h1 class="edit-title">Редактирование профиля</h1>
+
+    <form method="post" class="profile-edit-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="form-buttons">
+            <button type="submit" class="btn-save">💾 Сохранить изменения</button>
+            <a href="{% url 'profile' %}" class="btn-cancel">Отмена</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

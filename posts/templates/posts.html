@@ -5,8 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Блог группы PyE-242{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/posts.css' %}">
-    <script src="{% static 'js/likes2.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/post.css' %}">
+    <script src="{% static 'js/likes4.js' %}"></script>
 </head>
 <body>
     <header>
@@ -48,7 +48,7 @@
                 <button type="submit">Искать</button>
             </form>
             {% if user %}
-                <div class="empty">waghfaegbfrg</div>
+                <p></p>
                 <button type="submit">
                     <a href="{% url 'post_form' %}">Создать пост</a>
                 </button>
@@ -65,7 +65,7 @@
                     </h2>
                     <div class="post-meta">
                         Автор: {{ post.user.username }} |
-                        Опубликовано: {{ post.date_publication|date:"d.m.Y H:i" }}
+                        Опубликовано: {{ post.data_publication|date:"d.m.Y H:i" }}
                     </div>
                     <div class="post-categories">
                         {% for category in post.categories.all %}
@@ -79,11 +79,17 @@
                         {% endfor %}
                     </div>
                     <div class="post-reactions">
-                        <button onclick="likePost('{{ post.pk }}')" id="likeButton{{ post.pk }}">
-                            👍 {{ post.likes }}
+                        <button onclick="likePost('{{ post.pk }}')" 
+                                id="likeButton{{ post.pk }}"
+                                class="like {% if request.user in post.users_liked.all %}active{% endif %}"
+                                {% if not request.user.is_authenticated %}disabled{% endif %}>
+                            👍 <span class="count">{{ post.likes }}</span>
                         </button>
-                        <button onclick="dislikePost('{{post.pk}}')" id="dislikeButton{{ post.pk }}">
-                            👎 {{ post.dislikes }}
+                        <button onclick="dislikePost('{{ post.pk }}')" 
+                                id="dislikeButton{{ post.pk }}"
+                                class="dislike {% if request.user in post.users_disliked.all %}active{% endif %}"
+                                {% if not request.user.is_authenticated %}disabled{% endif %}>
+                            👎 <span class="count">{{ post.dislikes }}</span>
                         </button>
                     </div>
                 </div>
